@@ -122,7 +122,7 @@ Coverage: planner 97%, revision 92%, health 89%, controller 84%.
 
 ## Run it on real clusters
 
-Requires Go 1.24 and, for a real install, a hub cluster plus member clusters
+Requires Go 1.26 and, for a real install, a hub cluster plus member clusters
 (kind works).
 
 ```sh
