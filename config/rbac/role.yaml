@@ -1,0 +1,64 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: fleetwave-manager
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - controllerrevisions
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - watch
+- apiGroups:
+  - fleet.fleetwave.io
+  resources:
+  - fleetrollouts
+  verbs:
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - fleet.fleetwave.io
+  resources:
+  - fleetrollouts/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - fleet.fleetwave.io
+  resources:
+  - fleetrollouts/status
+  - memberclusters/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - fleet.fleetwave.io
+  resources:
+  - memberclusters
+  verbs:
+  - get
+  - list
+  - watch
