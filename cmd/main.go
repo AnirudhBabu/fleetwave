@@ -24,6 +24,7 @@ func main() {
 		metricsAddr      string
 		probeAddr        string
 		leaderElect      bool
+		leaderElectNS    string
 		pollInterval     time.Duration
 		driftInterval    time.Duration
 		probeInterval    time.Duration
@@ -33,6 +34,7 @@ func main() {
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "Address for the Prometheus metrics endpoint.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "Address for liveness and readiness probes.")
 	flag.BoolVar(&leaderElect, "leader-elect", false, "Enable leader election so only one replica reconciles.")
+	flag.StringVar(&leaderElectNS, "leader-election-namespace", "", "Namespace for the leader election lease. Defaults to the pod's namespace in-cluster; required when running outside a cluster.")
 	flag.DurationVar(&pollInterval, "poll-interval", 5*time.Second, "How often in-flight clusters are re-checked.")
 	flag.DurationVar(&driftInterval, "drift-interval", 10*time.Minute, "Re-apply finished rollouts this often to undo manual edits (0 disables).")
 	flag.DurationVar(&probeInterval, "probe-interval", 30*time.Second, "How often member clusters are probed.")
@@ -55,6 +57,7 @@ func main() {
 		HealthProbeBindAddress:        probeAddr,
 		LeaderElection:                leaderElect,
 		LeaderElectionID:              "fleetwave.fleet.fleetwave.io",
+		LeaderElectionNamespace:       leaderElectNS,
 		LeaderElectionReleaseOnCancel: true,
 	})
 	if err != nil {

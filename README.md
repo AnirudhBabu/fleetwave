@@ -143,7 +143,8 @@ kubectl describe fleetrollout checkout   # per-cluster state and events
 ```
 
 Manager flags: `--poll-interval`, `--drift-interval`, `--probe-interval`,
-`--apply-concurrency`, `--member-qps`, `--leader-elect`. Metrics are on `:8080`
+`--apply-concurrency`, `--member-qps`, `--leader-elect`,
+`--leader-election-namespace`. Metrics are on `:8080`
 (`fleetwave_rollout_phase`, `fleetwave_rollout_clusters`,
 `fleetwave_member_cluster_ready`, `fleetwave_rollbacks_total`, ...).
 

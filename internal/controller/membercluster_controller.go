@@ -80,6 +80,10 @@ func (r *MemberClusterReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	// the hub API server does not need.
 	if statusChanged(before, &mc.Status) || before.LastProbeTime == nil || now.Sub(before.LastProbeTime.Time) > 5*r.ProbeInterval {
 		if uerr := r.Status().Update(ctx, &mc); uerr != nil {
+			if apierrors.IsConflict(uerr) {
+				// Our cached copy was stale; probe again on a fresh read.
+				return ctrl.Result{Requeue: true}, nil
+			}
 			return ctrl.Result{}, uerr
 		}
 	}
