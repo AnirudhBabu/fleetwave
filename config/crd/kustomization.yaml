@@ -1,0 +1,3 @@
+resources:
+  - bases/fleet.fleetwave.io_memberclusters.yaml
+  - bases/fleet.fleetwave.io_fleetrollouts.yaml
