@@ -3,10 +3,13 @@ CONTROLLER_TOOLS_VERSION ?= v0.17.2
 SETUP_ENVTEST_VERSION ?= release-0.20
 IMG ?= fleetwave:dev
 
-LOCALBIN ?= $(CURDIR)/bin
+# Targets use the relative LOCALBIN because make splits target names on spaces;
+# LOCALBIN_ABS is for tools that need an absolute path and must always be quoted.
+LOCALBIN ?= bin
+LOCALBIN_ABS = $(CURDIR)/$(LOCALBIN)
 CONTROLLER_GEN ?= $(LOCALBIN)/controller-gen
 SETUP_ENVTEST ?= $(LOCALBIN)/setup-envtest
-ENVTEST_ASSETS = $(shell $(SETUP_ENVTEST) use $(ENVTEST_K8S_VERSION) --bin-dir $(LOCALBIN) -p path 2>/dev/null)
+ENVTEST_ASSETS = $(shell $(SETUP_ENVTEST) use $(ENVTEST_K8S_VERSION) --bin-dir "$(LOCALBIN_ABS)" -p path 2>/dev/null)
 
 .PHONY: all
 all: verify test build
@@ -73,10 +76,10 @@ $(LOCALBIN):
 	mkdir -p $(LOCALBIN)
 
 $(CONTROLLER_GEN): | $(LOCALBIN)
-	GOBIN=$(LOCALBIN) go install sigs.k8s.io/controller-tools/cmd/controller-gen@$(CONTROLLER_TOOLS_VERSION)
+	GOBIN="$(LOCALBIN_ABS)" go install sigs.k8s.io/controller-tools/cmd/controller-gen@$(CONTROLLER_TOOLS_VERSION)
 
 $(SETUP_ENVTEST): | $(LOCALBIN)
-	GOBIN=$(LOCALBIN) go install sigs.k8s.io/controller-runtime/tools/setup-envtest@$(SETUP_ENVTEST_VERSION)
+	GOBIN="$(LOCALBIN_ABS)" go install sigs.k8s.io/controller-runtime/tools/setup-envtest@$(SETUP_ENVTEST_VERSION)
 
 .PHONY: help
 help: ## Show targets.
