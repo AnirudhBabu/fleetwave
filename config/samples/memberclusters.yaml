@@ -1,0 +1,29 @@
+# Register member clusters. Each kubeconfig lives in a Secret on the hub under
+# the key "value", which is what Cluster API writes for <cluster>-kubeconfig,
+# so CAPI-provisioned clusters can be registered by pointing at that Secret.
+#
+#   kubectl -n fleetwave-system create secret generic bkk-1-kubeconfig --from-file=value=bkk-1.kubeconfig
+apiVersion: fleet.fleetwave.io/v1alpha1
+kind: MemberCluster
+metadata:
+  name: bkk-1
+  labels:
+    env: prod
+    region: bkk
+    fleet.fleetwave.io/canary: "true" # always lands in the first wave
+spec:
+  kubeconfigSecretRef:
+    namespace: fleetwave-system
+    name: bkk-1-kubeconfig
+---
+apiVersion: fleet.fleetwave.io/v1alpha1
+kind: MemberCluster
+metadata:
+  name: sgp-1
+  labels:
+    env: prod
+    region: sgp
+spec:
+  kubeconfigSecretRef:
+    namespace: fleetwave-system
+    name: sgp-1-kubeconfig

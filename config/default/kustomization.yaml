@@ -1,0 +1,5 @@
+namespace: fleetwave-system
+resources:
+  - ../crd
+  - ../rbac
+  - ../manager

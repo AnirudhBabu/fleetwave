@@ -1,0 +1,36 @@
+apiVersion: fleet.fleetwave.io/v1alpha1
+kind: FleetRollout
+metadata:
+  name: checkout
+  namespace: default
+spec:
+  clusterSelector:
+    matchLabels:
+      env: prod
+  strategy:
+    waves: ["1", "25%", "100%"] # canary, a quarter of the fleet, everything
+    bakeTime: 10m               # each wave must stay healthy this long
+    progressDeadline: 5m        # per cluster, from apply to healthy
+    maxFailures: 0              # first failure halts the rollout
+    autoRollback: true          # and puts the last good revision back
+  resources:
+    - apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: payments
+    - apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: checkout
+        namespace: payments
+      spec:
+        replicas: 3
+        selector:
+          matchLabels: {app: checkout}
+        template:
+          metadata:
+            labels: {app: checkout}
+          spec:
+            containers:
+              - name: checkout
+                image: registry.example/checkout:1.4.0
